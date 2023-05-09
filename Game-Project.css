@@ -1,3 +1,11 @@
 canvas { 
     background: #eee; 
 }
+
+#score {
+    position: absolute;
+    left: 80px;
+    top: 15px;
+    user-select: none;
+    font-size: 35px;
+  }

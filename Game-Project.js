@@ -1,5 +1,7 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext("2d");
+let score = 0;
+const scoreElement = document.querySelector('#score')
 const stage = []
 const FPS = 30;
 
@@ -20,16 +22,14 @@ let shaggy = {
       if(shaggy.left){
         shaggy.x -= shaggy.speed
       }
-    },
-  //   stack() {
-  //     stage.push(this)
-  //  }
+    }
   }
 
 
 function randomInteger(min, max) { 
     return Math.floor(Math.random() * (max - min + 1)) + min; 
 }
+
 
 
 class Food {
@@ -43,15 +43,12 @@ class Food {
     }
     onEnterFrame(){
        this.y += 3;
-      if(isColliding(shaggy, this)){
-        //this.stack();
-        // score++
-        // scoreElement.innerText = `Score: ${score}`;
-      }
       if(isStacking(stack, this)){
         this.destroy();
         this.addToStack();
-      }
+          score++
+          scoreElement.innerText = `Score: ${score}`;
+       }
      }
      addToStack(){
       stack.y -= 25
@@ -61,6 +58,32 @@ class Food {
       stage.splice(stage.indexOf(this), 1);
    }
   }
+
+
+  class Enemy {
+    constructor() {
+        this.color = 'red';
+        this.x = randomInteger(13, 887)
+        this.y = Math.random() * 150;
+        this.w = 20;
+        this.h = 20;
+        stage.push(this);
+      }
+      onEnterFrame(){
+         this.y += 5;
+       
+        if(isStacking(shaggy, this)){
+          this.destroy()
+          stack.y = 550
+          stack.h = 25
+        }
+       }
+       destroy() {
+        stage.splice(stage.indexOf(this), 1);
+     }
+    }
+ 
+
 
   let stack = {
       x: 450,
@@ -79,6 +102,8 @@ class Food {
     }
   }
 
+
+
 // in event listner is where were going to move the stack
 window.addEventListener('keydown', (e) => {
     console.log(e.key)
@@ -93,19 +118,10 @@ window.addEventListener('keydown', (e) => {
       }
 })
 
+
+
 //a character
 //b boxes/food
-// function isStacking(a, b){
-//   // const a1 = a.x < b.x + b.w
-//   // const a2 = a.w + a.x > b.x
-//   // const b1 = a.y < b.y + b.h
-//   // const b2 = a.h + a.y > b.y
-//   // return a1 && a2 && b1 && b2 
-//   if(a.x === b.x && a.y === b.y + 25){
-//     return true
-//   }
-// }
-
 function isColliding(a, b){
       const a1 = a.x < b.x + b.w
       const a2 = a.w + a.x > b.x
@@ -128,20 +144,6 @@ function isStacking(a, b) {
   }
 }
 
-// function isColliding(a, b) {
-//   const a1 = a.x < b.x + b.w;
-//   const a2 = a.w + a.x > b.x;
-//   const b1 = a.y < b.y + b.h;
-//   const b2 = a.h + a.y > b.y;
-
-//   if (a1 && a2 && b1 && b2) {
-//     a.y = b.y + b.h;
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-
 
 
 window.addEventListener('keyup', (e) => {
@@ -158,18 +160,29 @@ window.addEventListener('keyup', (e) => {
   })
 
 
+  function trackScore(){
+    ctx.fillRect(score)
+  }
+  
   function drawRect(obj) {
     ctx.fillStyle = obj.color;
     ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
   }
   
   function clearScreen() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+    
+
 
 function draw() {
   clearScreen();
-  if(Math.random() > .9) new Food;
+  if(Math.random() > .95) new Food;
+  stage.forEach(obj => {
+    drawRect(obj);
+    obj.onEnterFrame();
+  });
+  if(Math.random() > .95) new Enemy;
   stage.forEach(obj => {
     drawRect(obj);
     obj.onEnterFrame();
@@ -179,10 +192,18 @@ function draw() {
   shaggy.onEnterFrame();
   stack.onEnterFrame();
   // console.log(stage)
+  if(score > 4) {
+    clearInterval(gameLoop);
+    setTimeout(() => gameLoop = setInterval(draw, 1000 / FPS), 1000);
+    score = 0;
+  }
 }
-draw()
-setInterval(draw, 1000 / FPS)
 
+function startGame(){
+  draw();
+  let gameloop = setInterval(draw, 3500 / FPS)
+}
+startGame()
 
 
 
