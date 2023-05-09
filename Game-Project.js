@@ -4,6 +4,13 @@ let score = 0;
 const scoreElement = document.querySelector('#score')
 const stage = []
 const FPS = 30;
+const shaggyImg = document.createElement('img');
+shaggyImg.src = './img/Spongebob.png'
+const enemyImg = document.createElement('img');
+enemyImg.src = './img/JellyFish.png'
+const foodImg = document.createElement('img');
+foodImg.src = './img/KP.jpg'
+
 
 
 let shaggy = {
@@ -13,6 +20,7 @@ let shaggy = {
     w: 50,
     h: 75,
     // height and width of char
+    img: shaggyImg,
     color: 'brown',
     speed: 10,
     onEnterFrame() {
@@ -39,6 +47,7 @@ class Food {
       this.y = Math.random() * 150;
       this.w = 25;
       this.h = 25;
+      this.img = foodImg;
       stage.push(this);
     }
     onEnterFrame(){
@@ -67,6 +76,7 @@ class Food {
         this.y = Math.random() * 150;
         this.w = 20;
         this.h = 20;
+        this.img = enemyImg;
         stage.push(this);
       }
       onEnterFrame(){
@@ -102,9 +112,8 @@ class Food {
     }
   }
 
-
-
-// in event listner is where were going to move the stack
+  
+  // in event listner is where were going to move the stack
 window.addEventListener('keydown', (e) => {
     console.log(e.key)
     const pressedKey = e.key
@@ -119,6 +128,11 @@ window.addEventListener('keydown', (e) => {
 })
 
 
+function drawImg(obj){
+  if(obj.img){
+    ctx.drawImage
+  }
+}
 
 //a character
 //b boxes/food
@@ -144,6 +158,14 @@ function isStacking(a, b) {
   }
 }
 
+
+const drawStack = () => { 
+  let stackHeight = stack.y 
+  for (let i = 0; i < score; i++) { 
+    ctx.drawImage(sandwichImg, stack.x, stackHeight, 25, 25); 
+    stackHeight -= 25 
+  } 
+};
 
 
 window.addEventListener('keyup', (e) => {
@@ -172,10 +194,10 @@ window.addEventListener('keyup', (e) => {
   function clearScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
-    
-
-
-function draw() {
+  
+  
+  
+  function draw() {
   clearScreen();
   if(Math.random() > .95) new Food;
   stage.forEach(obj => {
@@ -216,16 +238,29 @@ startGame()
 
 
 
+// function drawObj(obj) {
+//   if(obj.img){
+//     ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
+//     return
+//   }
+//   ctx.fillStyle = obj.color;
+//   ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+// }
+// function clearScreen() {
+//   ctx.clearRect(0, 0, canvas.width, canvas.height);
+// }
+
+
 // Define the two rectangles
 // const rect1 = {
-//   x: 100,
-//   y: 100,
+  //   x: 100,
+  //   y: 100,
 //   w: 50,
 //   h: 50
 // }
 
 // const rect2 = {
-//   x: 100, // Same x-coordinate as rect1
+  //   x: 100, // Same x-coordinate as rect1
 //   y: 150, // Shifted down by the height of rect1 to stack them vertically
 //   w: 50,
 //   h: 50
