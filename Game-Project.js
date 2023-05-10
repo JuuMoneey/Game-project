@@ -5,11 +5,9 @@ const scoreElement = document.querySelector('#score')
 const stage = []
 const FPS = 30;
 const shaggyImg = document.createElement('img');
-shaggyImg.src = './img/Spongebob.png'
+shaggyImg.src = 'Sponge.png'
 const enemyImg = document.createElement('img');
-enemyImg.src = './img/JellyFish.png'
-const foodImg = document.createElement('img');
-foodImg.src = './img/KP.jpg'
+enemyImg.src = 'JellyFish.png'
 
 
 
@@ -42,11 +40,11 @@ function randomInteger(min, max) {
 
 class Food {
   constructor() {
-      this.color = 'yellow';
+      // this.color = 'yellow';
       this.x = randomInteger(13, 887)
       this.y = Math.random() * 150;
-      this.w = 25;
-      this.h = 25;
+      this.w = 50;
+      this.h = 50;
       this.img = foodImg;
       stage.push(this);
     }
@@ -60,8 +58,8 @@ class Food {
        }
      }
      addToStack(){
-      stack.y -= 25
-      stack.h += 25
+      // stack.y -= 25
+      stack.h += 50
      }
      destroy() {
       stage.splice(stage.indexOf(this), 1);
@@ -71,7 +69,7 @@ class Food {
 
   class Enemy {
     constructor() {
-        this.color = 'red';
+        // this.color = 'red';
         this.x = randomInteger(13, 887)
         this.y = Math.random() * 150;
         this.w = 20;
@@ -84,23 +82,23 @@ class Food {
        
         if(isStacking(shaggy, this)){
           this.destroy()
-          stack.y = 550
-          stack.h = 25
+          // stack.y = 550
+          // stack.h = 25
         }
        }
        destroy() {
         stage.splice(stage.indexOf(this), 1);
+        score = 0;
      }
     }
- 
 
 
+  
   let stack = {
       x: 450,
       y: 550,
-      h: 25,
-      w: 25,
-      color: 'blue',
+      h: 50,
+      w: 50,
       speed: 10,
     onEnterFrame() {
       if(stack.right) {
@@ -111,10 +109,11 @@ class Food {
       }
     }
   }
-
   
+  
+
   // in event listner is where were going to move the stack
-window.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', (e) => {
     console.log(e.key)
     const pressedKey = e.key
     if(pressedKey === 'ArrowRight'){
@@ -128,10 +127,8 @@ window.addEventListener('keydown', (e) => {
 })
 
 
-function drawImg(obj){
-  if(obj.img){
-    ctx.drawImage
-  }
+function drawImage(obj){
+    ctx.drawImage(obj.img, obj.x, obj.y, obj.w, obj.h);
 }
 
 //a character
@@ -142,14 +139,14 @@ function isColliding(a, b){
       const b1 = a.y < b.y + b.h
       const b2 = a.h + a.y > b.y
    return a1 && a2 && b1 && b2 
-}
-
+  }
+  
 function isStacking(a, b) {
   const a1 = a.x < b.x + b.w;
   const a2 = a.w + a.x > b.x;
   const b1 = a.y < b.y + b.h;
   const b2 = a.h + a.y > b.y;
-
+  
   if (a1 && a2 && b1 && b2) {
     b.y = a.y + a.h;
     return true;
@@ -158,12 +155,15 @@ function isStacking(a, b) {
   }
 }
 
+const foodImg = document.createElement('img');
+foodImg.src = 'KP.jpg'
 
 const drawStack = () => { 
-  let stackHeight = stack.y 
+  let stackHeight = stack.y
+
   for (let i = 0; i < score; i++) { 
-    ctx.drawImage(sandwichImg, stack.x, stackHeight, 25, 25); 
-    stackHeight -= 25 
+    ctx.drawImage(foodImg, stack.x, stackHeight, 50, 50); 
+    stackHeight -= 50 
   } 
 };
 
@@ -186,10 +186,10 @@ window.addEventListener('keyup', (e) => {
     ctx.fillRect(score)
   }
   
-  function drawRect(obj) {
-    ctx.fillStyle = obj.color;
-    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-  }
+  // function drawRect(obj) {
+  //   ctx.fillStyle = obj.color;
+  //   ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+  // }
   
   function clearScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -201,16 +201,17 @@ window.addEventListener('keyup', (e) => {
   clearScreen();
   if(Math.random() > .95) new Food;
   stage.forEach(obj => {
-    drawRect(obj);
+    drawImage(obj);
     obj.onEnterFrame();
   });
   if(Math.random() > .95) new Enemy;
   stage.forEach(obj => {
-    drawRect(obj);
+    drawImage(obj);
     obj.onEnterFrame();
   });
-  drawRect(shaggy);
-  drawRect(stack)
+  drawImage(shaggy);
+  // drawRect(stack)
+     drawStack();
   shaggy.onEnterFrame();
   stack.onEnterFrame();
   // console.log(stage)
