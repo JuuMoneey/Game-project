@@ -1,11 +1,19 @@
+* {
+    padding: 0;
+    margin: 0;
+  }
+ 
 canvas { 
-    background: #eee; 
+    display: block;
+    margin: 0 auto;
+    background: url('./KrustyKrab.png')no-repeat center center fixed;
+    background-size: 100% 100%;
 }
 
 #score {
     position: absolute;
     left: 80px;
-    top: 15px;
+    top: 25px;
     user-select: none;
-    font-size: 35px;
+    font-size: 25px;
   }
